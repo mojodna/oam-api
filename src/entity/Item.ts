@@ -4,27 +4,27 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  Generated,
   ManyToOne,
   UpdateDateColumn
 } from "typeorm";
 import {
-  ArrayNotEmpty,
-  IsDateString,
-  IsDefined,
+  IsDate,
   IsIn,
   IsNotEmpty,
-  IsUrl
+  IsUrl,
+  IsOptional
 } from "class-validator";
 
 import { User } from "./User";
 
 import { Geometry } from "geojson";
 
-// TODO internal + external representations differ (???)
 @Entity("items")
 export class Item extends BaseEntity {
-  @PrimaryGeneratedColumn("uuid") _id: string;
+  @PrimaryGeneratedColumn("uuid") id: string;
+
+  @Column()
+  _id: string;
 
   @ManyToOne(type => User, user => user.items)
   user: User;
@@ -66,17 +66,6 @@ export class Item extends BaseEntity {
   projection: string;
 
   @Column("double precision", {
-    array: true,
-    nullable: true
-  })
-  bbox: number[];
-
-  @Column({
-    nullable: true
-  })
-  footprint: string;
-
-  @Column("double precision", {
     nullable: true
   })
   gsd: number;
@@ -90,23 +79,23 @@ export class Item extends BaseEntity {
   @Column({
     nullable: true
   })
-  @IsDefined()
+  // @IsDefined()
   license: string;
 
   @Column({
     name: "acquisition_start",
     nullable: true
   })
-  @IsDefined()
-  @IsDateString()
+  @IsOptional()
+  @IsDate()
   acquisitionStart: Date;
 
   @Column({
     name: "acquisition_end",
     nullable: true
   })
-  @IsDefined()
-  @IsDateString()
+  @IsOptional()
+  @IsDate()
   acquisitionEnd: Date;
 
   @Column({
@@ -114,6 +103,11 @@ export class Item extends BaseEntity {
   })
   @IsIn(["satellite", "aircraft", "uav", "balloon", "kite"])
   platform: string;
+
+  @Column({
+    nullable: true
+  })
+  sensor: string;
 
   @Column({
     nullable: true
@@ -126,18 +120,10 @@ export class Item extends BaseEntity {
   @IsNotEmpty()
   provider: string;
 
-  // TODO check to see how this is represented; it might be { name, email } or a
-  // comma-delimited string
   @Column({
     nullable: true
   })
   contact: string;
-
-  // TODO how does typeorm handle PostGIS?
-  @Column("jsonb", {
-    nullable: true
-  })
-  geojson: any;
 
   @Column("jsonb", {
     nullable: true
@@ -145,22 +131,22 @@ export class Item extends BaseEntity {
   properties: any;
 
   @Column("text", {
-    array: true,
     nullable: true
   })
-  @ArrayNotEmpty()
-  @IsUrl(
-    {},
-    {
-      each: true
-    }
-  )
-  urls: string[];
+  @IsOptional()
+  @IsUrl({
+    protocols: ["http", "https", "s3"],
+    require_tld: false,
+    require_protocol: true
+  })
+  url: string;
 
   @Column({
     name: "uploaded_at",
     nullable: true
   })
+  @IsOptional()
+  @IsDate()
   uploadedAt: Date;
 
   @CreateDateColumn({
