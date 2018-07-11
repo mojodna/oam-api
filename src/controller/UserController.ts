@@ -1,25 +1,20 @@
-import {getRepository} from "typeorm";
-import {NextFunction, Request, Response} from "express";
-import {User} from "../entity/User";
+import { Context } from "koa";
+import { User } from "../entity/User";
 
-export class UserController {
+export default class UserController {
+  static async all(ctx: Context) {
+    ctx.body = User.find();
+  }
 
-    private userRepository = getRepository(User);
+  static async one(ctx: Context) {
+    return User.findOne(ctx.params.id);
+  }
 
-    async all(request: Request, response: Response, next: NextFunction) {
-        return this.userRepository.find();
-    }
+  static async save(ctx: Context) {
+    return User.save(ctx.body);
+  }
 
-    async one(request: Request, response: Response, next: NextFunction) {
-        return this.userRepository.findOne(request.params.id);
-    }
-
-    async save(request: Request, response: Response, next: NextFunction) {
-        return this.userRepository.save(request.body);
-    }
-
-    async remove(request: Request, response: Response, next: NextFunction) {
-        await this.userRepository.removeById(request.params.id);
-    }
-
+  static async remove(ctx: Context) {
+    await User.delete(ctx.params.id);
+  }
 }

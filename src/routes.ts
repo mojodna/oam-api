@@ -1,23 +1,16 @@
-import {UserController} from "./controller/UserController";
+import * as Router from "koa-router";
 
-export const Routes = [{
-    method: "get",
-    route: "/users",
-    controller: UserController,
-    action: "all"
-}, {
-    method: "get",
-    route: "/users/:id",
-    controller: UserController,
-    action: "one"
-}, {
-    method: "post",
-    route: "/users",
-    controller: UserController,
-    action: "save"
-}, {
-    method: "delete",
-    route: "/users",
-    controller: UserController,
-    action: "remove"
-}];
+import ItemController from "./controller/ItemController";
+import UserController from "./controller/UserController";
+
+const router = new Router();
+
+router.get("/items", ItemController.all);
+router.get("/items/:id", ItemController.one);
+router.post("/items", ItemController.save);
+router.put("/items/:id", ItemController.update);
+router.delete("/items/:id", ItemController.remove);
+
+router.get("/users", UserController.all);
+
+export { router };

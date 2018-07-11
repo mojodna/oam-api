@@ -3,17 +3,28 @@
    "version": "0.0.1",
    "description": "Awesome project developed with TypeORM.",
    "devDependencies": {
-      "ts-node": "3.3.0",
+      "@types/geojson": "^7946.0.4",
+      "@types/koa": "^2.0.46",
+      "@types/koa-bodyparser": "^5.0.0",
+      "@types/koa-router": "^7.0.29",
       "@types/node": "^8.0.29",
-      "typescript": "2.5.2"
+      "nodemon": "^1.17.5",
+      "ts-node": "^3.3.0",
+      "tslint": "^5.10.0",
+      "typescript": "^2.5.2"
    },
    "dependencies": {
-      "typeorm": "0.2.7",
+      "class-validator": "^0.8.5",
+      "koa": "^2.5.1",
+      "koa-bodyparser": "^4.2.1",
+      "koa-jwt": "^3.3.2",
+      "koa-router": "^7.4.0",
+      "pg": "^7.4.3",
       "reflect-metadata": "^0.1.10",
-      "express": "^4.15.4",
-      "body-parser": "^1.18.1"
+      "typeorm": "github:mojodna/typeorm#dist"
    },
    "scripts": {
-      "start": "ts-node src/index.ts"
+      "start": "ts-node src/index.ts",
+      "watch-server": "nodemon --watch 'src/**/*' -e ts,tsx --exec ts-node src/index.ts"
    }
 }
