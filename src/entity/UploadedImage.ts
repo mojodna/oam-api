@@ -14,7 +14,7 @@ export class UploadedImage extends BaseEntity {
   })
   _id: string;
 
-  @OneToMany(type => Item, item => item.upload)
+  @OneToMany(type => Item, item => item.uploadedImage)
   items: Item[];
 
   @ManyToOne(type => UploadedScene, scene => scene.images)
