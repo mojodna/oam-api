@@ -8,55 +8,66 @@ import {
   OneToMany
 } from "typeorm";
 import {
-  ArrayNotEmpty,
-  IsDate,
-  IsDefined,
   IsEmail,
-  IsIn,
   IsNotEmpty,
   IsUrl,
   MinLength,
-  MaxLength
+  MaxLength,
+  IsDate,
+  IsOptional
 } from "class-validator";
 
 import { Item } from "./Item";
+import { UploadedScene } from "./UploadedScene";
 
 @Entity("users")
 export class User extends BaseEntity {
-  @PrimaryGeneratedColumn() id: number;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
+
+  @Column({
+    unique: true
+  })
+  _id: string;
 
   @Column()
-  @MinLength(3)
-  @MaxLength(30)
+  @MinLength(2)
+  @MaxLength(50)
   name: string;
 
-  @Column()
-  @IsUrl()
+  @Column({
+    nullable: true
+  })
+  // @IsUrl()
   website: string;
 
   @Column()
-  @IsNotEmpty()
-  @MaxLength(300)
+  @MaxLength(1500)
   bio: string;
 
   @Column({
-    name: "facebook_id"
+    name: "facebook_id",
+    nullable: true
   })
-  facebookId: number;
+  facebookId: string;
 
   @Column({
-    name: "facebook_token"
+    name: "facebook_token",
+    nullable: true
   })
   facebookToken: string;
 
   @Column({
-    name: "google_id"
+    name: "google_id",
+    nullable: true
   })
-  googleId: number;
+  googleId: string;
 
   @Column({
-    name: "contact_email"
+    name: "contact_email",
+    nullable: true
   })
+  @IsOptional()
   @IsEmail()
   contactEmail: string;
 
@@ -66,24 +77,22 @@ export class User extends BaseEntity {
   @IsUrl()
   profilePicURI: string;
 
-  // TODO what is this?
-  @Column({
-    name: "bucket_url"
-  })
-  @IsUrl()
-  bucketUrl: string;
-
   @Column({
     name: "session_id"
   })
   sessionId: string;
+
   @Column({
     name: "session_expiration"
   })
+  @IsDate()
   sessionExpiration: Date;
 
   @OneToMany(type => Item, item => item.user)
   items: Item[];
+
+  @OneToMany(type => UploadedScene, scene => scene.user)
+  uploadedScenes: UploadedScene[];
 
   @CreateDateColumn({
     name: "created_at"

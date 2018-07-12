@@ -5,6 +5,7 @@ import { createConnection } from "typeorm";
 
 import { BinarySplitter } from "../src/lib/binary-splitter";
 import { Item } from "../src/entity/Item";
+import { User } from "../src/entity/User";
 
 class MetaImporter extends Writable {
   constructor() {
@@ -17,6 +18,16 @@ class MetaImporter extends Writable {
     try {
       const meta = JSON.parse(line.toString());
       const { wmts, tms, thumbnail, sensor, license, tags, crs, url, ...properties } = meta.properties;
+
+      let user;
+
+      if (meta.user != null) {
+        user = await User.findOne({
+          where: {
+            _id: meta.user.$oid
+          }
+        });
+      }
 
       const item = Item.create({
         _id: meta._id.$oid,
@@ -38,7 +49,8 @@ class MetaImporter extends Writable {
         contact: meta.contact,
         properties: properties,
         uploadedAt: meta.uploaded_at && new Date(meta.uploaded_at.$date),
-        url
+        url,
+        user
       });
 
       const errors = await validate(item);
@@ -56,10 +68,6 @@ class MetaImporter extends Writable {
       process.exit();
     }
 
-    return callback();
-  }
-
-  _flush(callback) {
     return callback();
   }
 }

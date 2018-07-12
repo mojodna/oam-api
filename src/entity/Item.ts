@@ -1,33 +1,48 @@
 import {
-  BaseEntity,
+  IsDate,
+  IsUrl,
+  IsOptional
+} from "class-validator";
+import { Geometry } from "geojson";
+import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
   ManyToOne,
-  UpdateDateColumn
+  UpdateDateColumn,
+  JoinColumn
 } from "typeorm";
-import {
-  IsDate,
-  IsIn,
-  IsNotEmpty,
-  IsUrl,
-  IsOptional
-} from "class-validator";
 
+import { Metadata } from "./Metadata";
+import { UploadedImage } from "./UploadedImage";
 import { User } from "./User";
 
-import { Geometry } from "geojson";
-
 @Entity("items")
-export class Item extends BaseEntity {
+export class Item extends Metadata {
   @PrimaryGeneratedColumn("uuid") id: string;
 
-  @Column()
+  @Column({
+    unique: true
+  })
   _id: string;
 
+  @ManyToOne(type => UploadedImage, image => image.items)
+  @JoinColumn({
+    name: "uploaded_image_id"
+  })
+  upload: UploadedImage;
+
   @ManyToOne(type => User, user => user.items)
+  @JoinColumn({
+    name: "user_id"
+  })
   user: User;
+
+  @Column({
+    nullable: true
+  })
+  contact: string;
 
   @Column("geometry", {
     nullable: true,
@@ -35,12 +50,6 @@ export class Item extends BaseEntity {
     srid: 4326
   })
   geom: Geometry;
-
-  // Image source
-  @Column({
-    nullable: true
-  })
-  uuid: string;
 
   @Column({
     name: "meta_uri",
@@ -57,12 +66,6 @@ export class Item extends BaseEntity {
   @Column({
     nullable: true
   })
-  @IsNotEmpty()
-  title: string;
-
-  @Column({
-    nullable: true
-  })
   projection: string;
 
   @Column("double precision", {
@@ -70,60 +73,11 @@ export class Item extends BaseEntity {
   })
   gsd: number;
 
-  @Column({
+  @Column("bigint", {
     name: "file_size",
     nullable: true
   })
   fileSize: number;
-
-  @Column({
-    nullable: true
-  })
-  // @IsDefined()
-  license: string;
-
-  @Column({
-    name: "acquisition_start",
-    nullable: true
-  })
-  @IsOptional()
-  @IsDate()
-  acquisitionStart: Date;
-
-  @Column({
-    name: "acquisition_end",
-    nullable: true
-  })
-  @IsOptional()
-  @IsDate()
-  acquisitionEnd: Date;
-
-  @Column({
-    nullable: true
-  })
-  @IsIn(["satellite", "aircraft", "uav", "balloon", "kite"])
-  platform: string;
-
-  @Column({
-    nullable: true
-  })
-  sensor: string;
-
-  @Column({
-    nullable: true
-  })
-  tags: string;
-
-  @Column({
-    nullable: true
-  })
-  @IsNotEmpty()
-  provider: string;
-
-  @Column({
-    nullable: true
-  })
-  contact: string;
 
   @Column("jsonb", {
     nullable: true
