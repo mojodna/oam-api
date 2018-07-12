@@ -1,6 +1,5 @@
 import { Writable } from "stream";
 
-import { validate } from "class-validator";
 import { createConnection } from "typeorm";
 
 import { BinarySplitter } from "../src/lib/binary-splitter";
@@ -25,14 +24,6 @@ class ImageImporter extends Writable {
         startedAt: image.startedAt && new Date(image.startedAt.$date),
         stoppedAt: image.stoppedAt && new Date(image.stoppedAt.$date)
       });
-
-      const errors = await validate(uploadedImage);
-
-      if (errors.length > 0) {
-        console.log(image);
-        console.log(errors);
-        process.exit();
-      }
 
       await uploadedImage.save();
     } catch (err) {

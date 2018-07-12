@@ -1,6 +1,5 @@
 import { Writable } from "stream";
 
-import { validate } from "class-validator";
 import { createConnection, In } from "typeorm";
 
 import { BinarySplitter } from "../src/lib/binary-splitter";
@@ -58,14 +57,6 @@ class UploadImporter extends Writable {
           tags: scene.tags,
           images
         });
-
-        const errors = await validate(uploadedScene);
-
-        if (errors.length > 0) {
-          console.log(upload);
-          console.log(errors);
-          process.exit();
-        }
 
         await uploadedScene.save();
       }

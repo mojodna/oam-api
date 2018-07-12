@@ -1,6 +1,5 @@
 import { Writable } from "stream";
 
-import { validate } from "class-validator";
 import { createConnection } from "typeorm";
 
 import { BinarySplitter } from "../src/lib/binary-splitter";
@@ -30,14 +29,6 @@ class UserImporter extends Writable {
         bio: u.bio || "",
         website: u.website
       });
-
-      const errors = await validate(user);
-
-      if (errors.length > 0) {
-        console.log(u);
-        console.log(errors);
-        process.exit();
-      }
 
       await user.save();
     } catch (err) {

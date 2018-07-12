@@ -1,11 +1,21 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, OneToMany, JoinColumn, BaseEntity } from "typeorm";
-import { IsOptional, IsDate, IsDefined } from "class-validator";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, OneToMany, JoinColumn, BaseEntity, BeforeInsert, BeforeUpdate } from "typeorm";
+import { IsOptional, IsDate, IsDefined, validate } from "class-validator";
 
 import { Item } from "./Item";
 import { UploadedScene } from "./UploadedScene";
 
 @Entity("uploaded_images")
 export class UploadedImage extends BaseEntity {
+  @BeforeInsert()
+  @BeforeUpdate()
+  async validate() {
+    const errors = await validate(this);
+
+    if (errors.length > 0) {
+      throw errors;
+    }
+  }
+
   @PrimaryGeneratedColumn("uuid")
   id: string;
 

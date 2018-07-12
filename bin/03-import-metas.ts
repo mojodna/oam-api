@@ -1,6 +1,5 @@
 import { Writable } from "stream";
 
-import { validate } from "class-validator";
 import { createConnection } from "typeorm";
 
 import { BinarySplitter } from "../src/lib/binary-splitter";
@@ -56,18 +55,10 @@ class MetaImporter extends Writable {
         contact: meta.contact,
         properties: properties,
         uploadedAt: meta.uploaded_at && new Date(meta.uploaded_at.$date),
-        url,
+        url: url || meta.uuid,
         user,
         uploadedImage
       });
-
-      const errors = await validate(item);
-
-      if (errors.length > 0) {
-        console.log(meta);
-        console.log(errors);
-        process.exit();
-      }
 
       await item.save();
     } catch (err) {

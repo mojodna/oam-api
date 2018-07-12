@@ -1,7 +1,9 @@
 import {
   IsDate,
   IsUrl,
-  IsOptional
+  IsOptional,
+  IsDefined,
+  validate
 } from "class-validator";
 import { Geometry } from "geojson";
 import {
@@ -11,7 +13,9 @@ import {
   CreateDateColumn,
   ManyToOne,
   UpdateDateColumn,
-  JoinColumn
+  JoinColumn,
+  BeforeInsert,
+  BeforeUpdate
 } from "typeorm";
 
 import { Metadata } from "./Metadata";
@@ -20,6 +24,16 @@ import { User } from "./User";
 
 @Entity("items")
 export class Item extends Metadata {
+  @BeforeInsert()
+  @BeforeUpdate()
+  async validate() {
+    const errors = await validate(this);
+
+    if (errors.length > 0) {
+      throw errors;
+    }
+  }
+
   @PrimaryGeneratedColumn("uuid") id: string;
 
   @Column({
@@ -84,10 +98,7 @@ export class Item extends Metadata {
   })
   properties: any;
 
-  @Column("text", {
-    nullable: true
-  })
-  @IsOptional()
+  @Column("text")
   @IsUrl({
     protocols: ["http", "https", "s3"],
     require_tld: false,

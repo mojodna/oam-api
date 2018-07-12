@@ -5,16 +5,18 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToMany
+  OneToMany,
+  BeforeInsert,
+  BeforeUpdate
 } from "typeorm";
 import {
   IsEmail,
-  IsNotEmpty,
   IsUrl,
   MinLength,
   MaxLength,
   IsDate,
-  IsOptional
+  IsOptional,
+  validate
 } from "class-validator";
 
 import { Item } from "./Item";
@@ -22,6 +24,16 @@ import { UploadedScene } from "./UploadedScene";
 
 @Entity("users")
 export class User extends BaseEntity {
+  @BeforeInsert()
+  @BeforeUpdate()
+  async validate() {
+    const errors = await validate(this);
+
+    if (errors.length > 0) {
+      throw errors;
+    }
+  }
+
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
