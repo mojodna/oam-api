@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, OneToMany, JoinColumn, BeforeInsert, BeforeUpdate } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, OneToMany, JoinColumn, BeforeInsert, BeforeUpdate, Index } from "typeorm";
 import { validate } from "class-validator";
 
 import { Metadata } from "./Metadata";
@@ -20,7 +20,12 @@ export class UploadedScene extends Metadata {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column()
+  @Column({
+    unique: true
+  })
+  @Index({
+    unique: true
+  })
   _id: string;
 
   @OneToMany(type => UploadedImage, image => image.scene)

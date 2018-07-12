@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, OneToMany, JoinColumn, BaseEntity, BeforeInsert, BeforeUpdate } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, OneToMany, JoinColumn, BaseEntity, BeforeInsert, BeforeUpdate, Index } from "typeorm";
 import { IsOptional, IsDate, IsDefined, validate } from "class-validator";
 
 import { Item } from "./Item";
@@ -20,6 +20,9 @@ export class UploadedImage extends BaseEntity {
   id: string;
 
   @Column({
+    unique: true
+  })
+  @Index({
     unique: true
   })
   _id: string;

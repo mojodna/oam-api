@@ -15,7 +15,8 @@ import {
   UpdateDateColumn,
   JoinColumn,
   BeforeInsert,
-  BeforeUpdate
+  BeforeUpdate,
+  Index
 } from "typeorm";
 
 import { Metadata } from "./Metadata";
@@ -37,6 +38,9 @@ export class Item extends Metadata {
   @PrimaryGeneratedColumn("uuid") id: string;
 
   @Column({
+    unique: true
+  })
+  @Index({
     unique: true
   })
   _id: string;

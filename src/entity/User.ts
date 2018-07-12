@@ -7,7 +7,8 @@ import {
   UpdateDateColumn,
   OneToMany,
   BeforeInsert,
-  BeforeUpdate
+  BeforeUpdate,
+  Index
 } from "typeorm";
 import {
   IsEmail,
@@ -38,6 +39,9 @@ export class User extends BaseEntity {
   id: string;
 
   @Column({
+    unique: true
+  })
+  @Index({
     unique: true
   })
   _id: string;
