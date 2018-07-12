@@ -31,7 +31,7 @@ export class Item extends Metadata {
   @JoinColumn({
     name: "uploaded_image_id"
   })
-  upload: UploadedImage;
+  uploadedImage: UploadedImage;
 
   @ManyToOne(type => User, user => user.items)
   @JoinColumn({

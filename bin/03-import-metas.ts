@@ -5,6 +5,7 @@ import { createConnection } from "typeorm";
 
 import { BinarySplitter } from "../src/lib/binary-splitter";
 import { Item } from "../src/entity/Item";
+import { UploadedImage } from "../src/entity/UploadedImage";
 import { User } from "../src/entity/User";
 
 class MetaImporter extends Writable {
@@ -29,6 +30,12 @@ class MetaImporter extends Writable {
         });
       }
 
+      const uploadedImage = await UploadedImage.findOne({
+        where: {
+          _id: meta.uuid.split("/").pop().split(".").shift()
+        }
+      });
+
       const item = Item.create({
         _id: meta._id.$oid,
         geom: meta.geojson,
@@ -50,7 +57,8 @@ class MetaImporter extends Writable {
         properties: properties,
         uploadedAt: meta.uploaded_at && new Date(meta.uploaded_at.$date),
         url,
-        user
+        user,
+        uploadedImage
       });
 
       const errors = await validate(item);
