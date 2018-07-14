@@ -34,7 +34,7 @@ class UploadImporter extends Writable {
         }
       });
 
-      for (const scene of upload.scenes) {
+      upload.scenes.forEach(async (scene, idx) => {
         const images = await UploadedImage.find({
           where: {
             _id: In(scene.images.map(i => i.$oid))
@@ -42,7 +42,7 @@ class UploadImporter extends Writable {
         });
 
         const uploadedScene = UploadedScene.create({
-          _id: upload._id.$oid,
+          _id: `${upload._id.$oid}/${idx}`,
           user,
           createdAt: new Date(upload.createdAt.$date),
           contactName: scene.contact && scene.contact.name,
@@ -59,11 +59,14 @@ class UploadImporter extends Writable {
         });
 
         await uploadedScene.save();
-      }
+      });
     } catch (err) {
-      console.log(err);
-      console.log(line.toString());
-      process.exit();
+      if (err.code !== "23505") {
+        // not a duplicate key error
+        console.log(err);
+        console.log(line.toString());
+        process.exit();
+      }
     }
 
     return callback();
