@@ -2,8 +2,7 @@
 
 ## Initialization
 
-1. Run `npm install` to install dependencies
-2. Run `npm start` to start the API server (use `npm run watch-server` for development)
+1. Run `docker-compose -f docker-compose.yml -f docker-compose.debug.yml up --build` to build and start in development mode.
 
 ## Database Initialization
 

@@ -1,0 +1,23 @@
+version: '2.1'
+
+services:
+  api:
+    image: oam-api
+    build:
+      context: .
+      args:
+        - NODE_ENV=development
+    environment:
+      NODE_ENV: development
+    ports:
+      - 3000:3000
+      # Chrome debugging API
+      - 9229:9229
+    command: npm run watch-server
+    volumes:
+      - ./bin:/opt/app/bin
+      - ./src:/opt/app/src
+      - ./ormconfig.js:/opt/app/ormconfig.js
+      - ./package-lock.json:/opt/app/package-lock.json
+      - ./package.json:/opt/app/package.json
+      - ./tsconfig.json:/opt/app/tsconfig.json
