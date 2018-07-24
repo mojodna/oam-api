@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsOptional, IsDate, IsIn } from "class-validator";
-import { Column, BaseEntity } from "typeorm";
+import { Column, BaseEntity, Index } from "typeorm";
 
 export abstract class Metadata extends BaseEntity {
   // Image source
@@ -23,6 +23,7 @@ export abstract class Metadata extends BaseEntity {
     name: "acquisition_start",
     nullable: true
   })
+  @Index()
   @IsOptional()
   @IsDate()
   acquisitionStart: Date;
@@ -31,6 +32,7 @@ export abstract class Metadata extends BaseEntity {
     name: "acquisition_end",
     nullable: true
   })
+  @Index()
   @IsOptional()
   @IsDate()
   acquisitionEnd: Date;

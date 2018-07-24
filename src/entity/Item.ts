@@ -67,6 +67,9 @@ export class Item extends Metadata {
     spatialFeatureType: "Geometry",
     srid: 4326
   })
+  @Index({
+    spatial: true
+  })
   geom: Geometry;
 
   @Column({
@@ -89,6 +92,7 @@ export class Item extends Metadata {
   @Column("double precision", {
     nullable: true
   })
+  @Index()
   gsd: number;
 
   @Column("bigint", {

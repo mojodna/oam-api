@@ -3,13 +3,13 @@
    "version": "0.0.0",
    "description": "The OpenAerialMap API",
    "repository": {
-     "type": "git",
-     "url": "https://github.com/hotosm/oam-api.git"
+      "type": "git",
+      "url": "https://github.com/hotosm/oam-api.git"
    },
    "author": "Humanitarian OpenStreetMap Team",
    "license": "BSD-3-Clause",
    "bugs": {
-     "url": "https://github.com/hotosm/oam-api/issues"
+      "url": "https://github.com/hotosm/oam-api/issues"
    },
    "homepage": "https://openaerialmap.org/",
    "devDependencies": {
@@ -24,6 +24,8 @@
       "typescript": "^2.5.2"
    },
    "dependencies": {
+      "@turf/bbox": "^6.0.1",
+      "@turf/bbox-polygon": "^6.0.1",
       "class-validator": "^0.8.5",
       "koa": "^2.5.1",
       "koa-bodyparser": "^4.2.1",
