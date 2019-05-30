@@ -170,11 +170,22 @@ module.exports = [
 
       return Meta.find({
         user,
-        geojson: {
-          $geoIntersects: {
-            $geometry: geometry
-          }
-        }
+        $or: [
+          {
+            geojson: {
+              $geoIntersects: {
+                $geometry: geometry
+              }
+            }
+          },
+          {
+            geojson: {
+              $geoWithin: {
+                $geometry: geometry
+              }
+            }
+          },
+        ]
       }, {
         acquisition_end: 1,
         geojson: 1,
